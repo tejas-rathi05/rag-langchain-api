@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdm
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environment
+venv/
+env/
+ENV/
+.venv/
+.ENV/
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# Mac OS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# dotenv files (NEVER push API keys)
+.env
+.env.*
+
+
+# Logs
+*.log
+
+# Jupyter notebooks (if any)
+.ipynb_checkpoints/
+
+# Optional: if you use LangSmith locally
+langchain-debug.json
