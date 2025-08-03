@@ -4,6 +4,5 @@
 # source .env
 
 # Start the FastAPI app
-#!/bin/bash
-exec gunicorn -k uvicorn.workers.UvicornWorker main:app --bind 0.0.0.0:$PORT
+uv run uvicorn main:app --host 0.0.0.0 --port $PORT
 
