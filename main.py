@@ -19,25 +19,7 @@ from dotenv import load_dotenv
 import os
 from pydantic import SecretStr
 
-load_dotenv()  # ✅ Loads from .env locally
-
 load_dotenv()
-
-# ✅ Read keys from environment variables
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-SERPAPI_API_KEY = os.getenv("SERPAPI_API_KEY")
-PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
-PINECONE_INDEX = os.getenv("PINECONE_INDEX")
-
-if not OPENAI_API_KEY:
-    raise ValueError("OPENAI_API_KEY is missing.")
-if not SERPAPI_API_KEY:
-    raise ValueError("SERPAPI_API_KEY is missing.")
-if not PINECONE_API_KEY:
-    raise ValueError("PINECONE_API_KEY is missing.")
-if not PINECONE_INDEX:
-    raise ValueError("PINECONE_INDEX is missing.")
-
 
 # initilizing our application
 app = FastAPI()
@@ -49,6 +31,12 @@ app.add_middleware(
     allow_methods=["*"],  # Allows all methods
     allow_headers=["*"],  # Allows all headers
 )
+
+def get_env_variable(name: str) -> str:
+    value = os.getenv(name)
+    if not value:
+        raise RuntimeError(f"{name} is missing in environment variables.")
+    return value
 
 # streaming function
 async def token_generator(content: str, streamer: QueueCallbackHandler):
@@ -92,6 +80,8 @@ async def invoke(content: str):
 
 @app.post("/upload_document")
 async def upload_document(file: UploadFile = File(...)):
+    PINECONE_API_KEY = get_env_variable("PINECONE_API_KEY")
+    PINECONE_INDEX = get_env_variable("PINECONE_INDEX")
     content = await file.read()
     text = ""
     if file.filename.endswith(".txt"):

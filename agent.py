@@ -22,21 +22,18 @@ from pydantic import SecretStr
 
 load_dotenv()  # ✅ Loads from .env locally
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-SERPAPI_API_KEY = os.getenv("SERPAPI_API_KEY")
-
-if not OPENAI_API_KEY:
-    raise ValueError("OPENAI_API_KEY is missing in env variables.")
-if not SERPAPI_API_KEY:
-    raise ValueError("SERPAPI_API_KEY is missing in env variables.")
-
+def get_env_var(name: str) -> str:
+    value = os.getenv(name)
+    if not value:
+        raise RuntimeError(f"{name} is missing in environment variables.")
+    return value
 
 # LLM and Prompt Setup
 llm = ChatOpenAI(
     model="gpt-4o-mini",
     temperature=0.0,
     streaming=True,
-    api_key=OPENAI_API_KEY
+    api_key=get_env_var("OPENAI_API_KEY")
 ).configurable_fields(
     callbacks=ConfigurableField(
         id="callbacks",
