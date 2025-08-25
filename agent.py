@@ -97,21 +97,21 @@ async def subtract(x: float, y: float) -> float:
     return y - x
 
 # Comment out SerpAPI tool
-# @tool
-# async def serpapi(query: str) -> list[Article]:
-#     """Use this tool to search the web."""
-#     params = {
-#         "api_key": SERPAPI_API_KEY.get_secret_value(),
-#         "engine": "google",
-#         "q": query,
-#     }
-#     async with aiohttp.ClientSession() as session:
-#         async with session.get(
-#             "https://serpapi.com/search",
-#             params=params
-#         ) as response:
-#             results = await response.json()
-#     return [Article.from_serpapi_result(result) for result in results["organic_results"]]
+@tool
+async def serpapi(query: str) -> list[Article]:
+    """Use this tool to search the web."""
+    params = {
+        "api_key": os.getenv("SERPAPI_API_KEY").get_secret_value(),
+        "engine": "google",
+        "q": query,
+    }
+    async with aiohttp.ClientSession() as session:
+        async with session.get(
+            "https://serpapi.com/search",
+            params=params
+        ) as response:
+            results = await response.json()
+    return [Article.from_serpapi_result(result) for result in results["organic_results"]]
 
 @tool
 async def final_answer(answer: str, tools_used: list[str]) -> dict[str, str | list[str]]:
